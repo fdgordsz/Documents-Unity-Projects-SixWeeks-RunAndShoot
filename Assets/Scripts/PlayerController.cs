@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
         {
             Move();
             LookAt();
-            Shoot();
+            WeaponAction();
         }
     }
 
@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour
         transform.localPosition += directions[dir] * delta;
     }
 
-    //U: Rotates the player toward the aim
+    //U: Rotates the player towards the aim
     private void LookAt()
     {
         Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -131,12 +131,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //U: Shoots if commanded
-    private void Shoot()
+    //U: Shoots or change weapon if commanded
+    private void WeaponAction()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Debug.Log("Player Controller: Weapon 0 Selected");
+            WeaponController.SwitchWeapon(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Debug.Log("Player Controller: Weapon 1 Selected");
+            WeaponController.SwitchWeapon(1);
+        }
+
         if (Input.GetMouseButton(0))
         {
-            BulletPool.TryShoot();
+            WeaponController.TryAction();
         }
     }
 }

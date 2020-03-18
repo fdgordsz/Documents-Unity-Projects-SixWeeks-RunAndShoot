@@ -38,7 +38,7 @@ public class GameCamera : MonoBehaviour
     static Transform camTrans;
     static Camera cam;
     static Transform target;
-    public enum CamState {STADARD, CLOSEUP, CUSTOM, TRANSITION}
+    public enum CamState {STANDARD, CLOSEUP, CUSTOM, TRANSITION}
     static CamState state;
 
     //Singleton Pattern:
@@ -89,7 +89,7 @@ public class GameCamera : MonoBehaviour
     public static void GoToStandard(float duration, Action cb = null)
     {
         instance.StopAllCoroutines();
-        instance.StartCoroutine(GoToCo(instance.standardRot, instance.standardPos, instance.standardSize, duration, CamState.STADARD, cb));
+        instance.StartCoroutine(GoToCo(instance.standardRot, instance.standardPos, instance.standardSize, duration, CamState.STANDARD, cb));
     }
 
     public static void GoToStandard(Action cb = null)

@@ -5,10 +5,10 @@ using UnityEngine;
 //Class with levelzero logic
 public class LevelZero : MonoBehaviour
 {
-    //Text that shows in initial message box
+    //Text that is displayed in the initial message box
     [SerializeField]
     string initialText;
-    //The target that camera will follow (player)
+    //The target that the camera will follow (player)
     [SerializeField]
     Transform target;
 
@@ -23,8 +23,8 @@ public class LevelZero : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Camera moves away from the player (bird view)
-        if (Input.GetKeyDown(KeyCode.Space) && GameCamera.GetState() == GameCamera.CamState.CLOSEUP)
+        //Camera moves away from the player (bird view) and activates character controls
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && GameCamera.GetState() == GameCamera.CamState.CLOSEUP)
         {
             DialogCanvas.HideDialog();
             GameCamera.GoToStandard(() => {
@@ -33,8 +33,8 @@ public class LevelZero : MonoBehaviour
                 });
         }
 
-        //Camera moves in front of the player
-        if (Input.GetKeyDown(KeyCode.Space) && GameCamera.GetState() == GameCamera.CamState.STADARD)
+        //Camera moves in front of the player and disables character controls
+        if (Input.GetKeyDown(KeyCode.Space) && GameCamera.GetState() == GameCamera.CamState.STANDARD)
         {
             
             GameCamera.GoToCloseUp(() => {
