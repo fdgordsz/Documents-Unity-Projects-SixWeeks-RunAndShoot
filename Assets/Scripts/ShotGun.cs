@@ -16,12 +16,25 @@ public class ShotGun : Weapon
     float reloadTime = 1f;
     [SerializeField]
     int bulletsPerShot = 6;
+
+    [Header("AngleSpread")]
     [SerializeField]
     [Range(0.01f,3f)]
-    float dirSpread = 0.1f;
+    float angleHorizontalSpread = 0.1f;
     [SerializeField]
-    [Range(0.01f, 1f)]
-    float posSpread = 0.1f;
+    [Range(0.01f, 3f)]
+    float angleVerticalSpread = 0.1f;
+
+    [Header("Pos Spread")]
+    [SerializeField]
+    [Range(0.01f, 3f)]
+    float posHorizontalSpread = 0.1f;
+    [SerializeField]
+    [Range(0.01f, 3f)]
+    float posVerticalSpread = 0.1f;
+    [SerializeField]
+    [Range(0.01f, 3f)]
+    float posForwardSpread = 0.1f;
 
     //Time until next shot is ready
     float coolDown;
@@ -75,8 +88,13 @@ public class ShotGun : Weapon
             {
                 for (int i = 0; i < idleBullets.Length; i++)
                 {
-                    var pos = transform.position + transform.right * Random.Range(-posSpread, posSpread) + transform.forward * Random.Range(-posSpread, posSpread);
-                    var dir = transform.forward + transform.right * Random.Range(-dirSpread, dirSpread);
+                    var pos = transform.position + 
+                        transform.right * Random.Range(-posHorizontalSpread, posHorizontalSpread) +
+                        transform.up * Random.Range(-posVerticalSpread, posVerticalSpread) +
+                        transform.forward * Random.Range(-posForwardSpread, posForwardSpread);
+                    var dir = transform.forward +
+                        transform.up * Random.Range(-angleVerticalSpread, angleVerticalSpread) +
+                        transform.right * Random.Range(-angleHorizontalSpread, angleHorizontalSpread);
                     idleBullets[i].Shoot(pos, dir, damage, speed, lifeSpan);
                     coolDown = reloadTime;
                 }
