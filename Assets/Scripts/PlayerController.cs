@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float movementSpeed = 10;
 
+    //U: Object that manages weapons
+    WeaponController weaponController;
+
     //U: If the player controlls are active (not in a dialog)
     static bool isActive = false;
 
@@ -28,6 +31,11 @@ public class PlayerController : MonoBehaviour
         [Direction.W] = -Vector3.right,
         [Direction.NW] = (Vector3.forward - Vector3.right) / 1.41f,
     };
+
+    private void Start()
+    {
+        weaponController = GetComponentInChildren<WeaponController>();
+    }
 
     //U: Returns the player controls status
     public static void SetActive(bool active)
@@ -137,17 +145,17 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("Player Controller: Weapon 0 Selected");
-            WeaponController.SwitchWeapon(0);
+            weaponController.SwitchWeapon(0);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Debug.Log("Player Controller: Weapon 1 Selected");
-            WeaponController.SwitchWeapon(1);
+            weaponController.SwitchWeapon(1);
         }
 
         if (Input.GetMouseButton(0))
         {
-            WeaponController.TryAction();
+            weaponController.TryAction();
         }
     }
 }

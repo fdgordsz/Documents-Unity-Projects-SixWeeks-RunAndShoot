@@ -5,28 +5,13 @@ using UnityEngine;
 //Manage weapons actions, selection, etc.
 public class WeaponController : MonoBehaviour
 {
-    static WeaponController instance;
-    static Weapon[] weapons;
-    static Weapon activeWeapon;
-
-    //Singleton Pattern
-    private void OnEnable()
-    {
-        if (instance != null)
-        {
-            Destroy(this);
-            return;
-        }
-        else
-        {
-            instance = this;
-        }
-    }
+    Weapon[] weapons;
+    Weapon activeWeapon;
 
     //Looks for all the weapons in childs
     private void Start()
     {
-        weapons = instance.GetComponentsInChildren<Weapon>();
+        weapons = GetComponentsInChildren<Weapon>();
         if (weapons != null && weapons.Length > 0)
         {
             activeWeapon = weapons[0];
@@ -40,7 +25,7 @@ public class WeaponController : MonoBehaviour
     }
 
     //U: Changes weapon, id is the position in weapons Hierarchy
-    public static void SwitchWeapon(int id)
+    public void SwitchWeapon(int id)
     {
         Debug.Log("id:" + id.ToString());
         if (id >= 0 && id < weapons.Length)
@@ -62,7 +47,7 @@ public class WeaponController : MonoBehaviour
     }
 
     //U: ShootS/AttackS if weapon is loaded/ready
-    public static void TryAction()
+    public void TryAction()
     {
         if (activeWeapon != null)
         {

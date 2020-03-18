@@ -18,9 +18,13 @@ public class Enemy : MonoBehaviour, IDamageable
     float damageAnimationDuration = 0.5f;
     [SerializeField]
     int damageAnimationCicles = 8;
+    [SerializeField]
+    int visionRadius = 8;
 
     float damageAnimationCounter = 0;
 
+    WeaponController weaponController;
+    Collider[] posibleTargetColliders = new Collider[4];
 
     public void OnDamage(float power)
     {
@@ -36,6 +40,19 @@ public class Enemy : MonoBehaviour, IDamageable
     void Start()
     {
         originalPos = transform.localPosition;
+        weaponController = GetComponentInChildren<WeaponController>();
+    }
+
+    Transform LookForTarget()
+    {
+        Transform result = null;
+        Physics.OverlapSphereNonAlloc(transform.position, visionRadius, posibleTargetColliders, 2 << 7, QueryTriggerInteraction.Collide);
+        if (posibleTargetColliders[0])
+        {
+            result = posibleTargetColliders[0].transform;
+            posibleTargetColliders[0] = null;
+        }
+        return result;
     }
 
     // Moves back and forth in a line
@@ -51,5 +68,25 @@ public class Enemy : MonoBehaviour, IDamageable
             transform.localScale = Vector3.one;
         }
         damageAnimationCounter -= Time.deltaTime;
+
+        var target = LookForTarget();
+        if (target)
+        {
+            LookAt(target);
+            WeaponAction();
+        }
+    }
+
+    //U: Rotates the unit towards the target
+    private void LookAt(Transform target)
+    {
+        Vector3 forward = Vector3.ProjectOnPlane(target.position - transform.position, Vector3.up);
+        transform.rotation = Quaternion.LookRotation(forward, Vector3.up);
+    }
+
+    //U: Shoots or change weapon
+    private void WeaponAction()
+    {
+        weaponController.TryAction();
     }
 }
