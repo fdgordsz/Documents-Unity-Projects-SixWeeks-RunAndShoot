@@ -8,11 +8,11 @@ public class CamGUI : MonoBehaviour
 {
     public static void ShowLifes(Action cb = null)
     {
-        Lifes.Enable(cb);
+        HealthGUI.Enable(cb);
     }
 
     public static void HideLifes()
     {
-        Lifes.Disable();
+        HealthGUI.Disable();
     }
 }

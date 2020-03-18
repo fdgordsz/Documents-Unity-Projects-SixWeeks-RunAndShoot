@@ -15,6 +15,7 @@ public class LevelZero : MonoBehaviour
     //Initial State of the scene
     void Start()
     {
+        Application.targetFrameRate = 300;
         DialogCanvas.ShowDialog(initialText);
         GameCamera.SetTarget(target);
         GameCamera.GoToCloseUp(0);

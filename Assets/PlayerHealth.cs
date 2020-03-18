@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerLife : MonoBehaviour, IDamageable
+public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [SerializeField]
     float maxLife = 100;
@@ -27,6 +27,8 @@ public class PlayerLife : MonoBehaviour, IDamageable
     {
         life -= power;
         damageAnimationCounter = damageAnimationDuration;
+        HealthGUI.SetPercentage(life / maxLife);
+
         if (life < 0)
         {
             gameObject.SetActive(false);
