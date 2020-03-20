@@ -11,6 +11,8 @@ public class AudioController : MonoBehaviour
     [SerializeField]
     AudioSource accion;
 
+    [SerializeField][Range(0,1f)]
+    float volume = 1f;
     [SerializeField]
     float zMin = 10f;
     [SerializeField]
@@ -21,20 +23,20 @@ public class AudioController : MonoBehaviour
     {
         if (player.position.z < zMin)
         {
-            tranca.volume = 1;
+            tranca.volume = volume;
             accion.volume = 0;
         }
         else if (player.position.z < zMax)
         {
             float interpol = Mathf.SmoothStep(0,1,(player.position.z - zMin) / (zMax - zMin));
             Debug.Log(interpol);
-            tranca.volume = Mathf.Pow(1f - interpol, 2);
-            accion.volume = Mathf.Pow(interpol, 3);
+            tranca.volume = Mathf.Pow(1f - interpol, 2) * volume;
+            accion.volume = Mathf.Pow(interpol, 3) * volume;
         }
         else
         {
             tranca.volume = 0;
-            accion.volume = 1;
+            accion.volume = volume;
         }
     }
 }

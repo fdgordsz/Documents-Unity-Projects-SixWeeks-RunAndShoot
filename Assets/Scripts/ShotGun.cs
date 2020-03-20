@@ -41,6 +41,7 @@ public class ShotGun : Weapon
 
     //Bullets pool (for perfonmance reasons it is better to have a pool of objects instead of instancing)
     ShotGunBullet[] bullets;
+    AudioSource audioSource;
 
     void Start()
     {
@@ -50,7 +51,7 @@ public class ShotGun : Weapon
             bullets[i].SetParent(transform);
             bullets[i].Sleep();
         }
-
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -98,6 +99,7 @@ public class ShotGun : Weapon
                     idleBullets[i].Shoot(pos, dir, damage, speed, lifeSpan);
                     coolDown = reloadTime;
                 }
+                audioSource.Play();
                 return true;
             }
             else
