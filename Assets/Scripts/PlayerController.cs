@@ -5,6 +5,9 @@ using UnityEngine;
 //U: Class that controlls character movement/actions
 public class PlayerController : MonoBehaviour
 {
+    //The Capsule Collider atached to the player
+    CapsuleCollider playerCol;
+
     //TODO: Move parameters to json or similar
     [SerializeField]
     float movementSpeed = 10;
@@ -31,10 +34,12 @@ public class PlayerController : MonoBehaviour
         [Direction.W] = -Vector3.right,
         [Direction.NW] = (Vector3.forward - Vector3.right) / 1.41f,
     };
+    Direction dir;
 
     private void Start()
     {
         weaponController = GetComponentInChildren<WeaponController>();
+        playerCol = GetComponentInChildren<CapsuleCollider>();
     }
 
     //U: Returns the player controls status
@@ -51,6 +56,7 @@ public class PlayerController : MonoBehaviour
             Move();
             LookAt();
             WeaponAction();
+            CheckCollisions();
         }
     }
 
@@ -118,8 +124,27 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         float delta = Time.deltaTime * movementSpeed;
-        Direction dir = GetDirectionInput();
+        dir = GetDirectionInput();
         transform.localPosition += directions[dir] * delta;
+    }
+
+    //U: Check if collision is with static object and avoids going through it
+    private void CheckCollisions()
+    {
+        int i = 0;
+        RaycastHit raycastHit = new RaycastHit();
+        while (Physics.SphereCast(transform.position + Vector3.up * 5f,
+            0.7f,
+            Vector3.down * 10f,
+            out raycastHit,
+            10f,
+            Layers.PropsLayer(),
+            QueryTriggerInteraction.Collide)
+            && i < 500)
+        {
+            transform.position -= directions[dir] * 0.001f;
+            i++;
+        }
     }
 
     //U: Rotates the player towards the aim
@@ -158,4 +183,5 @@ public class PlayerController : MonoBehaviour
             weaponController.TryAction();
         }
     }
+
 }
