@@ -146,12 +146,16 @@ public class GameCamera : MonoBehaviour
         //Repeat once per frame until a new "GoTo()" is commanded:
         while (true)
         {
-            camTrans.localPosition = GameCamera.target.position + actualOffset;
-            forward = target.position + Vector3.up - camTrans.position;
-            right = Vector3.Cross(forward, Vector3.up);
-            up = Vector3.Cross(right, forward);
-            camTrans.rotation = Quaternion.LookRotation(forward, up);
-            cam.orthographicSize = size;
+            if (!PauseMenu.IsPaused())
+            {
+                camTrans.localPosition = GameCamera.target.position + actualOffset;
+                forward = target.position + Vector3.up - camTrans.position;
+                right = Vector3.Cross(forward, Vector3.up);
+                up = Vector3.Cross(right, forward);
+                camTrans.rotation = Quaternion.LookRotation(forward, up);
+                cam.orthographicSize = size;
+            }
+            
             yield return null;
         }
     }

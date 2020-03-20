@@ -426,7 +426,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Modelado3D
+  m_Text: Modelado 3D
 --- !u!222 &771794622
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -503,7 +503,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: SFX & Musica
+  m_Text: "SFX & M\xFAsica"
 --- !u!222 &843420722
 CanvasRenderer:
   m_ObjectHideFlags: 0
