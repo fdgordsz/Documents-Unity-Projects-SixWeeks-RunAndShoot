@@ -40,6 +40,7 @@ public class GameCamera : MonoBehaviour
     static Transform target;
     public enum CamState {STANDARD, CLOSEUP, CUSTOM, TRANSITION}
     static CamState state;
+    static Vector3 actualOffset;
 
     //Singleton Pattern:
     private void Start()
@@ -52,6 +53,14 @@ public class GameCamera : MonoBehaviour
         }
         else
             Destroy(this);
+    }
+
+    private void Update()
+    {
+        if(Input.GetKey(KeyCode.Q))
+            actualOffset = Quaternion.Euler(0, Time.deltaTime * 40, 0) * actualOffset;
+        if(Input.GetKey(KeyCode.E))
+            actualOffset = Quaternion.Euler(0, -Time.deltaTime * 40, 0) * actualOffset;
     }
 
     //Returns Camera state
@@ -67,17 +76,17 @@ public class GameCamera : MonoBehaviour
     }
 
     //U: Interpolates smoothly to custom position, rotation and size
-    public static void GoToCustom(Quaternion rot, Vector3 offset, float size, float duration, Action cb = null)
+    public static void GoToCustom(Transform target, Vector3 offset, float size, float duration, Action cb = null)
     {
         instance.StopAllCoroutines();
-        instance.StartCoroutine(GoToCo(rot, offset, size, duration, CamState.CUSTOM, cb));
+        instance.StartCoroutine(GoToCo(target, offset, size, duration, CamState.CUSTOM, cb));
     }
 
     //U: Interpolates smoothly to "Close Up" postion, rotation and size
     public static void GoToCloseUp(float duration, Action cb = null)
     {
         instance.StopAllCoroutines();
-        instance.StartCoroutine(GoToCo(instance.closeRot, instance.closePos, instance.closeSize, duration, CamState.CLOSEUP, cb));
+        instance.StartCoroutine(GoToCo(target, instance.closePos, instance.closeSize, duration, CamState.CLOSEUP, cb));
     }
 
     public static void GoToCloseUp(Action cb = null)
@@ -89,7 +98,7 @@ public class GameCamera : MonoBehaviour
     public static void GoToStandard(float duration, Action cb = null)
     {
         instance.StopAllCoroutines();
-        instance.StartCoroutine(GoToCo(instance.standardRot, instance.standardPos, instance.standardSize, duration, CamState.STANDARD, cb));
+        instance.StartCoroutine(GoToCo(target, instance.standardPos, instance.standardSize, duration, CamState.STANDARD, cb));
     }
 
     public static void GoToStandard(Action cb = null)
@@ -98,15 +107,23 @@ public class GameCamera : MonoBehaviour
     }
     
     //U: Coroutine that interpolates to final pos, rot and size
-    static IEnumerator GoToCo(Quaternion rot, Vector3 offset, float size, float duration, CamState finalState, Action cb)
+    static IEnumerator GoToCo(Transform target, Vector3 offset, float size, float duration, CamState finalState, Action cb)
     {
         float counter = 0;
         float smoothedCounter = 0;
         float speed = 1f / duration;
 
-        Vector3 initialOffset = camTrans.position - target.position;
+        Vector3 initialOffset = camTrans.position - GameCamera.target.position;
         Quaternion initialRot = camTrans.rotation;
         float initialsSize = cam.orthographicSize;
+        actualOffset = offset;
+
+        camTrans.position = GameCamera.target.position + offset;
+        Vector3 forward = target.position + Vector3.up - camTrans.position;
+        Vector3 right = Vector3.Cross(forward, Vector3.up);
+        Vector3 up = Vector3.Cross(right, forward);
+        Quaternion finalRot = Quaternion.LookRotation(forward, up);
+        camTrans.position = initialOffset + GameCamera.target.position;
 
         state = CamState.TRANSITION;
         //A: Smooth interpolation using smoothstep function
@@ -114,8 +131,9 @@ public class GameCamera : MonoBehaviour
         {
             counter += Time.deltaTime * speed;
             smoothedCounter = Mathf.SmoothStep(0, 1, counter);
-            camTrans.position = target.position + Vector3.Lerp(initialOffset, offset, smoothedCounter);
-            camTrans.rotation = Quaternion.Lerp(initialRot, rot, smoothedCounter);
+
+            camTrans.position = GameCamera.target.position + Vector3.Lerp(initialOffset, actualOffset, smoothedCounter);
+            camTrans.rotation = Quaternion.Lerp(initialRot, finalRot, smoothedCounter);
             cam.orthographicSize = Mathf.Lerp(initialsSize, size, smoothedCounter);
             yield return null;
         }
@@ -128,8 +146,11 @@ public class GameCamera : MonoBehaviour
         //Repeat once per frame until a new "GoTo()" is commanded:
         while (true)
         {
-            camTrans.localPosition = target.position + offset;
-            camTrans.rotation = rot;
+            camTrans.localPosition = GameCamera.target.position + actualOffset;
+            forward = target.position + Vector3.up - camTrans.position;
+            right = Vector3.Cross(forward, Vector3.up);
+            up = Vector3.Cross(right, forward);
+            camTrans.rotation = Quaternion.LookRotation(forward, up);
             cam.orthographicSize = size;
             yield return null;
         }
