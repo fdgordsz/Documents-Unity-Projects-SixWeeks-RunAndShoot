@@ -132,7 +132,18 @@ public class PlayerController : MonoBehaviour
     private void CheckCollisions()
     {
         int i = 0;
+        Collider col;
         RaycastHit raycastHit = new RaycastHit();
+        Physics.SphereCast(transform.position + Vector3.up * 5f,
+            0.7f,
+            Vector3.down * 10f,
+            out raycastHit,
+            10f,
+            Layers.PropsLayer(),
+            QueryTriggerInteraction.Collide);
+
+        col = raycastHit.collider;
+
         while (Physics.SphereCast(transform.position + Vector3.up * 5f,
             0.7f,
             Vector3.down * 10f,
@@ -140,9 +151,9 @@ public class PlayerController : MonoBehaviour
             10f,
             Layers.PropsLayer(),
             QueryTriggerInteraction.Collide)
-            && i < 500)
+            && i < 500 && raycastHit.collider == col)
         {
-            transform.position -= directions[dir] * 0.001f;
+            transform.position -= directions[dir] * 0.01f;
             i++;
         }
     }
