@@ -56,7 +56,8 @@ public class SpitterBullet : MonoBehaviour
         if (other != null)
         {
             other.OnDamage(damage);
-            Sleep();
         }
+        Sleep();
     }
+
 }
