@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     //TODO: Move parameters to json or similar
     [SerializeField]
     float movementSpeed = 10;
+    AudioSource stepsAudioSource;
+    float targetVolume = 0;
 
     //U: Object that manages weapons
     WeaponController weaponController;
@@ -34,12 +36,15 @@ public class PlayerController : MonoBehaviour
         [Direction.W] = -Vector3.right,
         [Direction.NW] = (Vector3.forward - Vector3.right) / 1.41f,
     };
-    Direction dir;
+    Direction dir = Direction.C;
 
     private void Start()
     {
         weaponController = GetComponentInChildren<WeaponController>();
         playerCol = GetComponentInChildren<CapsuleCollider>();
+        stepsAudioSource = GetComponent<AudioSource>();
+        StartCoroutine(PlayStepsCo(stepsAudioSource.clip.length));
+        
     }
 
     //U: Returns the player controls status
@@ -126,6 +131,10 @@ public class PlayerController : MonoBehaviour
         float delta = Time.deltaTime * movementSpeed;
         dir = GetDirectionInput();
         transform.localPosition += directions[dir] * delta;
+        if (dir == Direction.C)
+            targetVolume = 0;
+        else
+            targetVolume = 0.6f;
     }
 
     //U: Check if collision is with static object and avoids going through it
@@ -192,6 +201,17 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             weaponController.TryAction();
+        }
+    }
+
+    IEnumerator PlayStepsCo(float clipLenght)
+    {
+        WaitForSeconds wait = new WaitForSeconds(clipLenght);
+        while (true)
+        {
+            stepsAudioSource.volume = (0.8f + Random.Range(-0.4f, 0.1f)) * targetVolume;
+            stepsAudioSource.pitch = 1f + Random.Range(-0.5f, 0.5f);
+            yield return wait;
         }
     }
 
