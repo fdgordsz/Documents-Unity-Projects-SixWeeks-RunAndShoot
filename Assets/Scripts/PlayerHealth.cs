@@ -31,6 +31,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         if (life < 0)
         {
+            EndGameMenu.Defeat();
             gameObject.SetActive(false);
         }
     }

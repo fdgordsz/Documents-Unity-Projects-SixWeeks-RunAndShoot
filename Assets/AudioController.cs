@@ -29,7 +29,6 @@ public class AudioController : MonoBehaviour
         else if (player.position.z < zMax)
         {
             float interpol = Mathf.SmoothStep(0,1,(player.position.z - zMin) / (zMax - zMin));
-            Debug.Log(interpol);
             tranca.volume = Mathf.Pow(1f - interpol, 2) * volume;
             accion.volume = Mathf.Pow(interpol, 3) * volume;
         }

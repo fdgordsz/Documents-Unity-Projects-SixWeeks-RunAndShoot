@@ -12,6 +12,9 @@ public class LevelZero : MonoBehaviour
     [SerializeField]
     Transform target;
 
+    [SerializeField]
+    GameObject[] enemys;
+
     //Initial State of the scene
     void Start()
     {
@@ -19,6 +22,7 @@ public class LevelZero : MonoBehaviour
         DialogCanvas.ShowDialog(initialText);
         GameCamera.SetTarget(target);
         GameCamera.GoToCloseUp(0.1f);
+        PlayerController.SetActive(false);
     }
 
     // Update is called once per frame
@@ -48,5 +52,11 @@ public class LevelZero : MonoBehaviour
             });
         }
 
+        foreach (var enemy in enemys)
+        {
+            if (enemy.activeInHierarchy)
+                return;
+        }
+        EndGameMenu.Victory();
     }
 }

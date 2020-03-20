@@ -40,22 +40,31 @@ public class PauseMenu : MonoBehaviour
     //Command to pause the game
     public static void PauseGame()
     {
-        instance.gameObject.SetActive(true);
-        Time.timeScale = 0;
-        paused = true;
+        if (!EndGameMenu.IsFinished())
+        {
+            instance.gameObject.SetActive(true);
+            Time.timeScale = 0;
+            paused = true;
+        }
+        
     }
 
     //Command to unpause the game
     public static void UnPauseGame()
     {
-        instance.gameObject.SetActive(false);
-        Time.timeScale = 1;
-        paused = false;
+        if (!EndGameMenu.IsFinished())
+        {
+            instance.gameObject.SetActive(false);
+            Time.timeScale = 1;
+            paused = false;
+        }
     }
 
     //Command to reset the game
     public static void ResetLevel()
     {
+        Time.timeScale = 1;
+        paused = false;
         instance.gameObject.SetActive(false);
         SceneManager.LoadScene(2);
     }
@@ -63,6 +72,8 @@ public class PauseMenu : MonoBehaviour
     //Command to go to MainMenu
     public static void MainMenu()
     {
+        Time.timeScale = 1;
+        paused = false;
         instance.gameObject.SetActive(false);
         SceneManager.LoadScene(0);
 
