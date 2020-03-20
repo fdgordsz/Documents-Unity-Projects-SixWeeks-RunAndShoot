@@ -21050,6 +21050,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f92fa24e10b41144d99d7d305364f762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unPause: {fileID: 1688985450}
+  reset: {fileID: 149692113}
+  mainMenu: {fileID: 2018984484}
 --- !u!1 &1289103934
 GameObject:
   m_ObjectHideFlags: 0

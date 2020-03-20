@@ -24,6 +24,9 @@ public class LevelZero : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            PauseMenu.PauseGame();
+
         //Camera moves away from the player (bird view) and activates character controls
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && GameCamera.GetState() == GameCamera.CamState.CLOSEUP)
         {
